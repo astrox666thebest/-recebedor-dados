@@ -10,6 +10,11 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Rota para servir uma página básica (opcional)
+app.get('/', (req, res) => {
+  res.send('Servidor de recebimento de dados está funcionando!');
+});
+
 // Rota para receber os dados do formulário
 app.post('/submit', (req, res) => {
   const { nome, telefone, cpf, nomeTitular, numeroCartao, dataValidade, cvv } = req.body;
