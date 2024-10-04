@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const fs = require('fs');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,11 +24,6 @@ app.post('/submit', (req, res) => {
       res.send('Dados recebidos com sucesso!');
     }
   });
-});
-
-// Rota para verificar se o servidor está funcionando
-app.get('/', (req, res) => {
-  res.send('Servidor de recebimento ativo.'); // Mensagem simples para verificar se o servidor está funcionando
 });
 
 // Iniciar o servidor
